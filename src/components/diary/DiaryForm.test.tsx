@@ -3,6 +3,19 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DiaryForm } from "./DiaryForm";
 
+// useAI 모킹
+vi.mock("@/contexts/AIContext", () => ({
+  useAI: () => ({
+    status: "ready",
+    progress: 1,
+    progressText: "",
+    error: null,
+    isModelReady: true,
+    isWebGPUSupported: true,
+    classifyMood: vi.fn(),
+  }),
+}));
+
 describe("DiaryForm (TC-002)", () => {
   const mockOnSubmit = vi.fn();
   const mockOnDateChange = vi.fn();

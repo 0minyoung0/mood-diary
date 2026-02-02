@@ -42,9 +42,11 @@ const mockEntry: DiaryEntry = {
 vi.mock("@/contexts/AIContext", () => ({
   useAI: () => ({
     status: "ready",
-    progress: 100,
+    progress: 1,
     progressText: "",
     error: null,
+    isModelReady: true,
+    isWebGPUSupported: true,
     classifyMood: mockClassifyMood,
   }),
 }));

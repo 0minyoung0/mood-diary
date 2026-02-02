@@ -27,4 +27,4 @@ export interface MoodStats {
   total: number;
 }
 
-export type AIStatus = "idle" | "loading" | "ready" | "error";
+export type AIStatus = "idle" | "loading" | "ready" | "error" | "unsupported";

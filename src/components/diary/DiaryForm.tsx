@@ -4,7 +4,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Hand } from "lucide-react";
+import { useAI } from "@/contexts/AIContext";
 
 interface DiaryFormProps {
   initialDate?: string;
@@ -26,6 +27,7 @@ export function DiaryForm({
   const today = new Date().toISOString().split("T")[0];
   const [date, setDate] = useState(initialDate || today);
   const [content, setContent] = useState(initialContent);
+  const { status, progress, isWebGPUSupported } = useAI();
 
   useEffect(() => {
     if (initialDate) {
@@ -48,6 +50,19 @@ export function DiaryForm({
   const charCount = content.length;
   const maxChars = 5000;
   const isOverLimit = charCount > maxChars;
+
+  const getButtonText = () => {
+    if (disabled) return "다른 날짜를 선택해주세요";
+    if (isSubmitting) return "분석 중...";
+    if (!isWebGPUSupported) return "감정 직접 선택하기";
+    if (status === "loading") {
+      const progressPercent = Math.round(progress * 100);
+      return `AI로 감정 분석하기 (로딩: ${progressPercent}%)`;
+    }
+    return "AI로 감정 분석하기";
+  };
+
+  const ButtonIcon = isWebGPUSupported ? Sparkles : Hand;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -94,8 +109,8 @@ export function DiaryForm({
         className="w-full gap-2"
         size="lg"
       >
-        <Sparkles className="h-4 w-4" />
-        {disabled ? "다른 날짜를 선택해주세요" : isSubmitting ? "분석 중..." : "AI로 감정 분석하기"}
+        <ButtonIcon className="h-4 w-4" />
+        {getButtonText()}
       </Button>
     </form>
   );

@@ -14,6 +14,8 @@ interface AIContextValue {
   progress: number;
   progressText: string;
   error: string | null;
+  isModelReady: boolean;
+  isWebGPUSupported: boolean;
   classifyMood: (content: string) => Promise<Mood>;
 }
 
@@ -32,7 +34,7 @@ export function AIProvider({ children }: AIProviderProps) {
   useEffect(() => {
     const checkWebGPU = async () => {
       if (!navigator.gpu) {
-        setStatus("error");
+        setStatus("unsupported");
         setError(
           "WebGPU를 지원하지 않는 브라우저입니다. Chrome 113+ 또는 Edge 113+를 사용해주세요."
         );
@@ -76,9 +78,12 @@ export function AIProvider({ children }: AIProviderProps) {
     return aiService.classifyMood(content);
   }, []);
 
+  const isModelReady = status === "ready";
+  const isWebGPUSupported = status !== "unsupported";
+
   return (
     <AIContext.Provider
-      value={{ status, progress, progressText, error, classifyMood }}
+      value={{ status, progress, progressText, error, isModelReady, isWebGPUSupported, classifyMood }}
     >
       {children}
     </AIContext.Provider>

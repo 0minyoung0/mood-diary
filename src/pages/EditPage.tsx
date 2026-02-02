@@ -8,15 +8,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
 import { useAI } from "@/contexts/AIContext";
 import { diaryService } from "@/services/diaryService";
-import { ArrowLeft, Save, Calendar } from "lucide-react";
+import { ArrowLeft, Save, Calendar, AlertCircle } from "lucide-react";
 import type { DiaryEntry, Mood } from "@/types";
 
 export function EditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { classifyMood } = useAI();
+  const { classifyMood, status, progress, isModelReady, isWebGPUSupported } = useAI();
 
   const [entry, setEntry] = useState<DiaryEntry | null>(null);
   const [content, setContent] = useState("");
@@ -166,19 +167,33 @@ export function EditPage() {
           <CardContent className="space-y-4">
             <MoodPicker selected={selectedMood} onChange={setSelectedMood} />
 
-            <div className="flex items-center space-x-2 pt-2">
-              <Checkbox
-                id="reanalyze"
-                checked={reanalyze}
-                onCheckedChange={(checked) => setReanalyze(checked === true)}
-              />
-              <label
-                htmlFor="reanalyze"
-                className="text-sm text-muted-foreground cursor-pointer"
-              >
-                AI로 감정 다시 분석하기
-              </label>
-            </div>
+            {isWebGPUSupported ? (
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="reanalyze"
+                    checked={reanalyze}
+                    onCheckedChange={(checked) => setReanalyze(checked === true)}
+                    disabled={!isModelReady}
+                  />
+                  <label
+                    htmlFor="reanalyze"
+                    className={`text-sm cursor-pointer ${!isModelReady ? "text-muted-foreground/60" : "text-muted-foreground"}`}
+                  >
+                    AI로 감정 다시 분석하기
+                    {status === "loading" && ` (로딩: ${Math.round(progress * 100)}%)`}
+                  </label>
+                </div>
+                {status === "loading" && (
+                  <Progress value={progress * 100} className="h-1" />
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 pt-2 text-sm text-muted-foreground">
+                <AlertCircle className="h-4 w-4" />
+                <span>AI 감정 분석 기능을 사용할 수 없습니다 (WebGPU 미지원)</span>
+              </div>
+            )}
           </CardContent>
         </Card>
 
