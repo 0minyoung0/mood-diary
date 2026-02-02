@@ -27,7 +27,7 @@ export function AINotReadyDialog({
   onWait,
 }: AINotReadyDialogProps) {
   const { progress, progressText } = useAI();
-  const progressPercent = Math.round(progress * 100);
+  const progressPercent = Math.round(progress);
 
   return (
     <AlertDialog open={open} onOpenChange={(open) => !open && onClose()}>

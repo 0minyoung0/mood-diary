@@ -29,12 +29,12 @@ export function AILoadingIndicator() {
     return null;
   }
 
-  const progressPercent = Math.round(progress * 100);
+  const progressPercent = Math.round(progress);
 
   return (
     <div
       className={cn(
-        "fixed bottom-4 right-4 z-50 transition-all duration-500",
+        "fixed bottom-20 right-4 z-40 transition-all duration-500",
         fadeOut && "opacity-0 translate-y-2"
       )}
     >

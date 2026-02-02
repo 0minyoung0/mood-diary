@@ -33,7 +33,7 @@ vi.mock("react-router-dom", async () => {
 vi.mock("@/contexts/AIContext", () => ({
   useAI: () => ({
     status: "ready",
-    progress: 1,
+    progress: 100,
     progressText: "",
     error: null,
     isModelReady: true,

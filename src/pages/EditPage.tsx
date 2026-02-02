@@ -181,11 +181,11 @@ export function EditPage() {
                     className={`text-sm cursor-pointer ${!isModelReady ? "text-muted-foreground/60" : "text-muted-foreground"}`}
                   >
                     AI로 감정 다시 분석하기
-                    {status === "loading" && ` (로딩: ${Math.round(progress * 100)}%)`}
+                    {status === "loading" && ` (로딩: ${Math.round(progress)}%)`}
                   </label>
                 </div>
                 {status === "loading" && (
-                  <Progress value={progress * 100} className="h-1" />
+                  <Progress value={progress} className="h-1" />
                 )}
               </div>
             ) : (

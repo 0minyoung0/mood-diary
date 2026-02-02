@@ -56,7 +56,7 @@ export function DiaryForm({
     if (isSubmitting) return "분석 중...";
     if (!isWebGPUSupported) return "감정 직접 선택하기";
     if (status === "loading") {
-      const progressPercent = Math.round(progress * 100);
+      const progressPercent = Math.round(progress);
       return `AI로 감정 분석하기 (로딩: ${progressPercent}%)`;
     }
     return "AI로 감정 분석하기";
